@@ -1,0 +1,56 @@
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_container_broadcast"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context="com.parse.app.TontineActivity" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView android:id="@+id/listviewMembre"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            android:stackFromBottom="false"
+            android:animateLayoutChanges="false"/>
+
+        <ScrollView
+            android:id="@+id/emptyList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--<TextView
+                android:id="@+id/textNoLive"
+                android:text="Aucun membre n'est présent! "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="7dp"
+                android:textSize="14sp"
+                android:textColor="@color/gris"
+                android:gravity="center">
+
+            </TextView>-->
+            <TextView
+                android:id="@+id/textNoLive"
+                android:text="Ce module n'est pas encore activé!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:padding="50dp"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:background="@color/background_material_dark"
+                android:gravity="center">
+                </TextView>
+
+        </ScrollView>
+
+    </FrameLayout>
+
+
+</android.support.v4.widget.SwipeRefreshLayout>
+

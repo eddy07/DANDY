@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- the parent view - provides the gray listfragment background color -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:orientation="vertical"
+    android:background="@drawable/frame"
+    android:gravity="top">
+
+            <TextView
+                android:id="@+id/auteur"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10sp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:text="Auteur"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="5dp"
+                android:textSize="20dp"
+                android:textColor="@color/evernote_footer_text"
+                android:textAppearance="@android:style/TextAppearance.Medium.Inverse" />
+
+                <TextView
+                    android:id="@+id/montant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="message"
+                    android:textSize="18dp"
+                    android:paddingLeft="10sp"
+                    android:layout_marginLeft="10dp"
+                    android:textColorHint="@color/gris_background"
+                    android:textColor="@color/evernote_footer_text"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="normal"/>
+            </LinearLayout>
+

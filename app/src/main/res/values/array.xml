@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string-array name="spinnerItems">
+            <item>Lundi</item>
+            <item>Mardi</item>
+            <item>Mercredi</item>
+            <item>Jeudi</item>
+            <item>Vendredi</item>
+            <item>samedi</item>
+            <item>Dimanche</item>
+            <item>Tous les jours</item>
+        </string-array>
+</resources>

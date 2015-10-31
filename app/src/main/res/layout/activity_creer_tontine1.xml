@@ -1,0 +1,79 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.save.app.LoginActivity"
+    android:id="@+id/setup_step1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@drawable/framelog"
+        android:paddingBottom="15dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nom de la tontine :"
+            android:textColor="@color/app_color"
+            android:textSize="19dp"
+            android:textStyle="bold"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"/>
+        <EditText
+            android:id="@+id/nom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/edit"
+            android:textColorHint="@color/gris_background"
+            android:textColor="@color/evernote_footer_text"
+            android:background="@color/white"
+            android:hint="nom"
+            android:layout_marginLeft="5dp"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:textSize="18dp"/>
+        <TextView
+            android:id="@+id/typetontine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Type de tontine :"
+            android:textStyle="bold"
+            android:textColor="@color/app_color"
+            android:textSize="19dp"
+            android:padding="10dp"/>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="60dp"
+            android:layout_below="@+id/typetontine"
+            android:layout_alignLeft="@+id/textView2"
+            android:layout_alignStart="@+id/textView2">
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Enchère"
+            android:id="@+id/radioButton"
+            android:textSize="18dp"
+            android:textColor="@color/evernote_button_bkg"
+            android:checked="false"
+            android:layout_gravity="center_horizontal" />
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Tour de role"
+            android:id="@+id/radioButton2"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:textColor="@color/evernote_button_bkg"
+            android:textSize="18dp" />
+        </RadioGroup>
+
+    </LinearLayout>
+
+
+</LinearLayout>
