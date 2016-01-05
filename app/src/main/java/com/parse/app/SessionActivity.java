@@ -73,7 +73,7 @@ public class SessionActivity extends ActionBarActivity implements SwipeRefreshLa
         ScrollView emptyView = (ScrollView) findViewById(R.id.emptyList);
         listView.setEmptyView(emptyView);
         thistontine = new Tontine();
-        contentLoad = (TextView) findViewById(R.id.textNoLive);
+        contentLoad = (TextView) findViewById(R.id.textNoSession);
         contentLoad.setVisibility(View.GONE);
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 

@@ -21,10 +21,8 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
         switch (index) {
 
             case 0:
-                // a la une fragment activity
                 return new MesTontinesFragment();
             case 1:
-                // mes journaux fragment activity
                 return new TontinesFragment();
 
         }

@@ -85,8 +85,8 @@
             android:layout_height="wrap_content"
             android:drawSelectorOnTop="true"
             android:prompt="@string/prompt"
-            android:entries="@array/spinnerItems"
-            android:spinnerStyle="@android:style/Widget.Spinner.DropDown"
+            android:entries="@array/jours_tontines"
+            android:theme="@style/mySpinner"
             >
         </Spinner>
         <EditText

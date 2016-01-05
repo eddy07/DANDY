@@ -49,7 +49,7 @@ public class FeedBackActivity extends ActionBarActivity {
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mSend.setClickable(false);
                 String message = mMessage.getText().toString();
                 if (!message.isEmpty()) {
                     initprogress();
@@ -62,17 +62,20 @@ public class FeedBackActivity extends ActionBarActivity {
                             if (e == null) {
                                 progressDialog.dismiss();
                                 snackBar(true);
+                                mSend.setClickable(true);
                                 //Toast.makeText(context,"Thanks for your feedback :)",Toast.LENGTH_LONG).show();
                             } else {
                                 progressDialog.dismiss();
                                 snackBar(false);
                                 //Toast.makeText(context,"Erreur d'envoi",Toast.LENGTH_LONG).show();
+                                mSend.setClickable(true);
                             }
                         }
                     });
 
                 } else {
                     mMessage.setError("Champ vide");
+                    mSend.setClickable(true);
                 }
             }
 

@@ -5,6 +5,8 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.List;
+
 /**
  * Created by Jeddy on 27/08/2015.
  */
@@ -23,6 +25,14 @@ public class Tontine extends ParseObject {
         return getString("nom");
     }
 
+    public void setTel(String tel) {
+        put("tel", tel);
+    }
+
+    public String getTel() {
+        return getString("tel");
+    }
+
     public void setNom(String nom) {
         put("nom", nom);
     }
@@ -32,7 +42,15 @@ public class Tontine extends ParseObject {
     }
 
     public void setDescription(String description) {
-       put("description", description);
+        put("description", description);
+    }
+
+    public Integer getMontant() {
+        return getInt("montant");
+    }
+
+    public void setMontant(Integer montant) {
+        put("montant", montant);
     }
 
     public Integer getNbMembre() {
@@ -59,14 +77,6 @@ public class Tontine extends ParseObject {
         put("president", president);
     }
 
-    public void setMontantCotisation(Integer montant) {
-        put("montant_cotisation", montant);
-    }
-
-    public Integer getMontantCotisation() {
-        return getInt("montant_cotisation");
-    }
-
     public void setJourCotisation(String jour) {
         put("jour_cotisation", jour);
     }
@@ -75,23 +85,16 @@ public class Tontine extends ParseObject {
         return getString("jour_cotisation");
     }
 
-    public void setNbBeneficiaire(Integer nbBeneficiaire) {
-        put("nb_beneficiaire", nbBeneficiaire);
-    }
-
-    public String getville() {
-        return getString("ville");
-    }
-
-    public void setville(String ville) {
-        put("ville", ville);
-    }
-
-    public Integer getNbBeneficiaire() {
-        return getInt("nb_beneficiaire");
-    }
-
     public String getSessionStatu(){return getString("session_statu");}
 
     public void setSessionStatu(String statu){put("session_statu",statu);}
+
+    public void setType(String type){put("type", type);}
+
+    public String getType(){ return getString("type");}
+
+    public void setAmande(String amande){ put("gerer_amande", amande);}
+
+    public String getAmande(){return getString("gerer_amande");}
+
 }

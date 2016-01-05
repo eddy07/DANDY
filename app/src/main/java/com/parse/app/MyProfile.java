@@ -5,22 +5,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
-
 
 public class MyProfile extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-                 FadingActionBarHelper helper = new FadingActionBarHelper()
-                     .actionBarBackground(R.drawable.ab_background)
-                     .headerLayout(R.layout.header)
-                     .contentLayout(R.layout.activity_my_profile);
-                   setContentView(helper.createView(this));
-                  helper.initActionBar(this);
-
+        setContentView(R.layout.my_profile);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setElevation(10);
     }
 
 

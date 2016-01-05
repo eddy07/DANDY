@@ -4,13 +4,13 @@
     tools:context="com.parse.app.FeedBackActivity"
     android:id="@+id/setup_step1"
     android:layout_width="fill_parent"
+    android:layout_marginTop="?attr/actionBarSize"
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"
         android:orientation="vertical">
 
         <LinearLayout

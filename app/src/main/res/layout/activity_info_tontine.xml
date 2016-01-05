@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="65dp"
+    android:layout_marginTop="?android:actionBarSize"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -18,8 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="8dp"
         android:background="@drawable/frame">
         <TextView
+            android:id="@+id/labelNom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nom de la Tontine"
@@ -38,21 +40,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/evernote_footer_text"
-            android:textSize="17dp"
+            android:textSize="13dp"
             android:padding="15dp"/>
 
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/blockville"
+        android:id="@+id/blocktype"
         android:layout_below="@+id/blockName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/frame">
         <TextView
+            android:id="@+id/labelType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ville de la Tontine"
+            android:text="Type"
             android:textStyle="bold"
             android:textSize="15dp"
             android:padding="15dp"
@@ -64,26 +67,27 @@
 
         </View>
         <TextView
-            android:id="@+id/villetext"
+            android:id="@+id/typetext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/evernote_footer_text"
-            android:textSize="17dp"
+            android:textSize="13dp"
             android:padding="15dp"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/blockMontant"
+        android:id="@+id/blockAmande"
         android:layout_below="@+id/blockville"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/frame">
         <TextView
+            android:id="@+id/labelAmande"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Montant de cotisation"
+            android:text="Gere les amandes?"
             android:textSize="15dp"
             android:textStyle="bold"
             android:padding="15dp"
@@ -95,44 +99,15 @@
 
         </View>
         <TextView
-            android:id="@+id/montanttext"
+            android:id="@+id/amandetext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/evernote_footer_text"
-            android:textSize="17dp"
+            android:textSize="13dp"
             android:padding="15dp"/>
 
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/blockNbBeneficiaire"
-        android:layout_below="@+id/blockName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/frame">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nombre de beneficiaire"
-            android:textStyle="bold"
-            android:textSize="15dp"
-            android:padding="15dp"
-            android:textColor="@color/app_color"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.2dp"
-            android:background="@color/evernote_button_pressed">
 
-        </View>
-        <TextView
-            android:id="@+id/nb_beneficiairetext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/evernote_footer_text"
-            android:textSize="17dp"
-            android:padding="15dp"/>
-
-    </LinearLayout>
             <LinearLayout
                 android:id="@+id/blockJourTontine"
                 android:layout_below="@+id/blockName"
@@ -141,6 +116,7 @@
                 android:orientation="vertical"
                 android:background="@drawable/frame">
                 <TextView
+                    android:id="@+id/labelJour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Jour de tontine"
@@ -160,7 +136,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/evernote_footer_text"
-                    android:textSize="17dp"
+                    android:textSize="13dp"
                     android:padding="15dp"/>
 
             </LinearLayout>
@@ -172,6 +148,7 @@
                 android:orientation="vertical"
                 android:background="@drawable/frame">
                 <TextView
+                    android:id="@+id/labelDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Description"
@@ -190,7 +167,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/evernote_footer_text"
-                    android:textSize="17dp"
+                    android:textSize="13dp"
                     android:padding="15dp"/>
 
             </LinearLayout>
@@ -221,7 +198,7 @@
                     android:textColor="@color/evernote_footer_text"
                     android:textSize="12dp"
                     android:textStyle="normal"
-                    android:text="Vous souhaitez rejoindre notre tontine? Envoyez nous votre demande en clicquant sur le boutton ci-contre!"
+                    android:text="Vous souhaitez rejoindre notre tontine? Envoyez nous votre demande en clicquant sur le boutton ci-dessous!"
                     android:padding="10dp"/>
                 <TextView
                     android:id="@+id/btnInvite"
@@ -234,7 +211,6 @@
                     android:padding="5dp"
                     android:text="rejoindre"/>
             </LinearLayout>
-
         </LinearLayout>
 
     </ScrollView>

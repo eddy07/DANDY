@@ -23,9 +23,15 @@ public class DiscussionFragment extends Fragment implements SwipeRefreshLayout.O
     private TontinesAdapter mAdapter;
     private LinearLayout infoLayout;
     private TontinesAdapter adapter;
+    private String tontineId;
     private ProgressBar loadingData;
     private SwipeRefreshLayout swipeLayout;
     private boolean reachedTop = true;
+
+    public DiscussionFragment(String tontineId){
+
+        this.tontineId = tontineId;
+    }
 
     @Override
     public void onDestroy() {

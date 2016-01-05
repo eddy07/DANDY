@@ -146,8 +146,8 @@ public class TontineActivity extends ActionBarActivity implements ActionBar.TabL
                                     item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                         @Override
                                         public boolean onMenuItemClick(MenuItem menuItem) {
-                                            //closeSessionService();
-                                            test();
+                                            closeSessionService();
+
                                             return true;
                                         }
 
@@ -232,88 +232,9 @@ public class TontineActivity extends ActionBarActivity implements ActionBar.TabL
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
     }
-    public void closeSessionService() {
-        Log.d("click","enter");
-        /*final MaterialDialog materialDialog = new MaterialDialog(this);
-        materialDialog.setMessage("Voulez-vous vraiment fermer la session en cours ?");
-        materialDialog.setNegativeButton("NO", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("click","enter1");
-                materialDialog.dismiss();
-            }
-        });
-        materialDialog.setPositiveButton("YES", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                materialDialog.dismiss();*/
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                context);
-
-        // set title
-        //alertDialogBuilder.setTitle("Your Title");
-
-        // set dialog message
-        alertDialogBuilder
-                .setMessage("Voulez-vous vraiment fermer la session en cours ?")
-                .setCancelable(false)
-                .setPositiveButton("Oui",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                        // if this button is clicked, close
-                        // current activity
-                        if (NetworkUtil.getConnectivityStatus(context) == 0) {
-                            Toast.makeText(context, R.string.no_internet, Toast.LENGTH_SHORT).show();
-
-                        } else {
-                            Log.d("click","enter2");
-                            initprogress2();
-                            ParseQuery<Session> sessionParseQuery = ParseQuery.getQuery(Session.class);
-                            sessionParseQuery.whereEqualTo("president", thisuser);
-                            sessionParseQuery.whereEqualTo("statu", "ouverte");
-                            sessionParseQuery.getInBackground(sessionId, new GetCallback<Session>() {
-                                @Override
-                                public void done(Session session, ParseException e) {
-                                    session.setStatu("fermée");
-                                    session.saveInBackground(new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-                                            if (e == null) {
-                                                Log.d("click","enter3");
-                                                progressDialog.dismiss();
-                                                onBackPressed();
-                                            } else {
-                                                Log.d("click","enter4");
-                                                progressDialog.dismiss();
-                                                Log.d("Session", "Fail to close with error : " + e.getMessage());
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                    }
-                })
-                .setNegativeButton("Non",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                        // if this button is clicked, just close
-                        // the dialog box and do nothing
-                        dialog.cancel();
-                    }
-                });
-
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
-    }
-
-           /* }
-        });*/
 
 
-    public void test(){
+    public void closeSessionService(){
         final MaterialDialog materialDialog = new MaterialDialog(context);
         materialDialog.setMessage("Voulez-vous vraiment fermer la session en cours ?");
 

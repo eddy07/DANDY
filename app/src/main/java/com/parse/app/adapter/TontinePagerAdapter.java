@@ -24,7 +24,7 @@ public class TontinePagerAdapter extends FragmentStatePagerAdapter {
 
             case 0:
                 // a la une fragment activity
-                return new DiscussionFragment();
+                return new DiscussionFragment(sessionId);
             case 1:
                 // mes journaux fragment activity
                 return new MembresFragment(sessionId);

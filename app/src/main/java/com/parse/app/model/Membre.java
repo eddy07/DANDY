@@ -32,4 +32,10 @@ public class Membre extends ParseObject{
     public ParseUser getResponsable() {
         return getParseUser("responsable");
     }
+    public void setFonction(String  fonction) {
+        put("fonction",fonction);
+    }
+    public String getFonction() {
+        return getString("fonction");
+    }
 }

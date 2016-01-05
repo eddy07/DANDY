@@ -4,7 +4,6 @@
     android:id="@+id/swipe_container_broadcast"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="40dp"
     android:background="@drawable/background"
     tools:context="com.parse.app.ListMembreActivity">
 
@@ -15,7 +14,7 @@
         <ListView android:id="@+id/listviewMembre"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:stackFromBottom="false"
             android:animateLayoutChanges="false"/>
 
@@ -32,10 +31,10 @@
                 android:id="@+id/progress_wheel"
                 android:visibility="visible"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                wheel:matProg_barColor="#7c4dff"
+                wheel:matProg_barColor="#90454567"
                 wheel:matProg_progressIndeterminate="true" />
 
             <TextView

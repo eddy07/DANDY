@@ -10,7 +10,7 @@ import com.parse.ParseObject;
 public class Compte extends ParseObject{
 
 
-    public String getUserId() {
+    public String getUser() {
         return getString("userId");
     }
 

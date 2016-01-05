@@ -20,6 +20,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gc.materialdesign.widgets.SnackBar;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -33,6 +34,7 @@ import com.parse.app.utilities.NetworkUtil;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
@@ -45,6 +47,7 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
     private SwipeRefreshLayout swipeLayout;
     private boolean reachedTop = true;
     private ParseUser thisuser;
+    private SnackBar snackBar;
     private ProgressWheel progressWheel;
     private TextView textNoTontine;
 
@@ -65,91 +68,127 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onRefresh() {
-        if(NetworkUtil.getConnectivityStatus(getActivity().getApplicationContext())==0) {
-            Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
-            swipeLayout.setRefreshing(false);
-        }else {
+    public void loadTontinesFromLocalDataStore(){
+        Log.d("Loading Tontines", " From LocalDataStore");
+        ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
+        membreParseQuery.whereEqualTo("adherant", thisuser);
+        membreParseQuery.fromLocalDatastore();
+        membreParseQuery.findInBackground(new FindCallback<Membre>() {
+            @Override
+            public void done(List<Membre> membres, ParseException e) {
 
-            ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
-            membreParseQuery.whereEqualTo("adherant", thisuser);
-            membreParseQuery.findInBackground(new FindCallback<Membre>() {
-                @Override
-                public void done(List<Membre> membres, ParseException e) {
-                    if(e==null) {
+                if (e == null && membres.size() > 0) {
+                    int nbMembre = membres.size();
+                    String[] tontineId = {};
 
-                        //final List<Tontine> membreTontines = new ArrayList<Tontine>();
-                        for (Membre membre : membres) {
-                            //membreTontines.add(membre.getTontine());
-                            ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
-                            tontineParseQuery.whereNotEqualTo("objectId",membre.getTontine().getObjectId());
-                            tontineParseQuery.findInBackground(new FindCallback<Tontine>() {
-                                @Override
-                                public void done(List<Tontine> tontines, ParseException e) {
-                                    if(e==null){
-                                        mItems = tontines;
-                                        if(mItems.size()>0) {
-                                            listview.setAdapter(new TontinesAdapter(getActivity().getApplicationContext(), mItems));
-                                        }
-                                        else if (mItems.size()==0) {
-                                            TontinesAdapter ta = new TontinesAdapter(getActivity().getApplicationContext(), mItems);
-                                            ta.clear();
-                                            listview.setAdapter(ta);
-                                            ta.notifyDataSetChanged();
-                                            System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
-                                        }
-                                        swipeLayout.setRefreshing(false);
-                                    }else{
-                                        Log.d("Tontine","Not found");
-                                        swipeLayout.setRefreshing(false);
-                                    }
-                                }
-                            });
-                        }
-
-                    }else{
-                        Log.d("Membre", "not found");
-                        swipeLayout.setRefreshing(false);
+                    for (int i = 0; i < nbMembre; i++) {
+                        tontineId[i] = membres.get(i).getTontine().getObjectId();
                     }
-
+                    List<String> idList = new ArrayList<String>();
+                    ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
+                    for (int i = 0; i < tontineId.length; i++) {
+                        //tontineParseQuery.whereNotEqualTo("objectId", tontineId[i]);
+                        idList.add(tontineId[i]);
+                    }
+                    tontineParseQuery.fromLocalDatastore();
+                    tontineParseQuery.whereNotContainedIn("objectId", idList);
+                    tontineParseQuery.findInBackground(new FindCallback<Tontine>() {
+                        @Override
+                        public void done(List<Tontine> tontines, ParseException e) {
+                            if (e == null) {
+                                mItems = tontines;
+                                if (mItems.size() > 0) {
+                                    progressWheel.setVisibility(View.GONE);
+                                    textNoTontine.setVisibility(View.GONE);
+                                    listview.setAdapter(new TontinesAdapter(getActivity().getApplicationContext(), mItems));
+                                } else if (mItems.size() == 0) {
+                                    TontinesAdapter ta = new TontinesAdapter(getActivity().getApplicationContext(), mItems);
+                                    ta.clear();
+                                    progressWheel.setVisibility(View.GONE);
+                                    listview.setAdapter(ta);
+                                    ta.notifyDataSetChanged();
+                                    System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
+                                    textNoTontine.setVisibility(View.VISIBLE);
+                                }
+                                swipeLayout.setRefreshing(false);
+                            } else {
+                                Log.d("Tontine", "Not found");
+                                swipeLayout.setRefreshing(false);
+                                progressWheel.setVisibility(View.GONE);
+                                textNoTontine.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+                }else{
+                    Log.d("Membre", "not found");
+                    swipeLayout.setRefreshing(false);
+                    progressWheel.setVisibility(View.GONE);
+                    textNoTontine.setVisibility(View.VISIBLE);
                 }
-            });
-
-        }
+            }
+        });
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        setRetainInstance(true);
-        View rootView = inflater.inflate(R.layout.fragment_tontines,container, false);
-        listview = (ListView) rootView.findViewById(R.id.listviewTontine);
-        adapter = new TontinesAdapter(getActivity().getApplicationContext(), mItems);
-        listview.setAdapter(adapter);
-        listview.setDividerHeight(0);
-        thisuser = ParseUser.getCurrentUser();
-        ScrollView emptyView = (ScrollView) rootView.findViewById(R.id.emptyList);
-        listview.setEmptyView(emptyView);
-
-        textNoTontine = (TextView) rootView.findViewById(R.id.textNoTontine);
-        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
-        listview.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container_broadcast);
-        swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorSchemeColors(R.color.app_color, R.color.app_color, R.color.app_color);
-        swipeLayout.setEnabled(true);
-        swipeLayout.setRefreshing(true);
+    public void loadTontines(ParseUser user){
         if(NetworkUtil.getConnectivityStatus(getActivity().getApplicationContext())==0) {
-            Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
+            //loadTontinesFromLocalDataStore();
+            swipeLayout.setRefreshing(false);
+            snackBar();
         }else {
-
-            ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
-            membreParseQuery.whereEqualTo("adherant", thisuser);
+            Log.d("Loading Tontines", " From Parse Server");
+            final ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
+            membreParseQuery.whereEqualTo("adherant", user);
             membreParseQuery.findInBackground(new FindCallback<Membre>() {
                 @Override
                 public void done(List<Membre> membres, ParseException e) {
-                    if(e==null) {
+
+                    if (e == null && membres.size() > 0) {
+                        List<String> tontineIdList = new ArrayList<String>();
+                        int n = membres.size();
+                        String[] list = {};
+                        for (Membre membre : membres) {
+                            tontineIdList.add(membre.getTontine().getObjectId());
+
+                        }
+                        /*for(int i=0; i<n; i++){
+                            list[i] = membres.get(i).getTontine().getObjectId();
+                        }*/
+
+                    ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
+                    tontineParseQuery.whereNotContainedIn("objectId", Arrays.asList(tontineIdList));
+                    tontineParseQuery.setLimit(20);
+                    tontineParseQuery.findInBackground(new FindCallback<Tontine>() {
+                        @Override
+                        public void done(List<Tontine> tontines, ParseException e) {
+                            if (e == null) {
+                                mItems = tontines;
+                                if (mItems.size() > 0) {
+                                    progressWheel.setVisibility(View.GONE);
+                                    textNoTontine.setVisibility(View.GONE);
+                                    listview.setAdapter(new TontinesAdapter(getActivity().getApplicationContext(), mItems));
+                                } else {
+                                    progressWheel.setVisibility(View.GONE);
+                                    TontinesAdapter ta = new TontinesAdapter(getActivity().getApplicationContext(), mItems);
+                                    ta.clear();
+                                    listview.setAdapter(ta);
+                                    ta.notifyDataSetChanged();
+                                    textNoTontine.setVisibility(View.VISIBLE);
+                                    System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
+
+                                }
+                                swipeLayout.setRefreshing(false);
+                            } else {
+                                Log.d("Tontine", "Not found");
+                                swipeLayout.setRefreshing(false);
+                                progressWheel.setVisibility(View.GONE);
+                                textNoTontine.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+
+                    /*if(e==null) {
 
                         for (Membre membre : membres) {
                             ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
@@ -181,11 +220,137 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
                                     }
                                 }
                             });
+                        }*/
+
+                    }if (e == null && membres.size() == 0) {
+
+                        ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
+                        tontineParseQuery.setLimit(20);
+                        tontineParseQuery.findInBackground(new FindCallback<Tontine>() {
+                            @Override
+                            public void done(List<Tontine> tontines, ParseException e) {
+                                if (e == null) {
+                                    mItems = tontines;
+                                    if (mItems.size() > 0) {
+                                        progressWheel.setVisibility(View.GONE);
+                                        textNoTontine.setVisibility(View.GONE);
+                                        listview.setAdapter(new TontinesAdapter(getActivity().getApplicationContext(), mItems));
+                                    } else {
+                                        progressWheel.setVisibility(View.GONE);
+                                        TontinesAdapter ta = new TontinesAdapter(getActivity().getApplicationContext(), mItems);
+                                        ta.clear();
+                                        listview.setAdapter(ta);
+                                        ta.notifyDataSetChanged();
+                                        textNoTontine.setVisibility(View.VISIBLE);
+                                        System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
+
+                                    }
+                                    swipeLayout.setRefreshing(false);
+                                } else {
+                                    Log.d("Tontine", "Not found");
+                                    swipeLayout.setRefreshing(false);
+                                    progressWheel.setVisibility(View.GONE);
+                                    textNoTontine.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        });
+
+                    } else{
+                        Log.d("Membre", "not found");
+                        swipeLayout.setRefreshing(false);
+                        progressWheel.setVisibility(View.GONE);
+                        textNoTontine.setVisibility(View.VISIBLE);
+                    }
+
+                }
+            });
+        }
+        }
+
+    @Override
+    public void onRefresh() {
+        if(NetworkUtil.getConnectivityStatus(getActivity().getApplicationContext())==0) {
+            //Toast.makeText(getActivity().getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
+            swipeLayout.setRefreshing(false);
+            snackBar();
+
+        }else {
+            Log.d("Refreshing Tontines", " From Parse Server");
+            ParseQuery<Membre> membreParseQuery = ParseQuery.getQuery(Membre.class);
+            membreParseQuery.whereEqualTo("adherant", thisuser);
+            membreParseQuery.findInBackground(new FindCallback<Membre>() {
+                @Override
+                public void done(List<Membre> membres, ParseException e) {
+
+                    if (e == null && membres.size() > 0) {
+                        List<String> tontineId = new ArrayList<String>();
+                        List<String> tontineIdList = new ArrayList<String>();
+                        int n = membres.size();
+                        String[] list = null;
+                        for (Membre membre : membres) {
+                            tontineIdList.add(membre.getTontine().getObjectId());
+
                         }
+                        /*for(int i=0; i<n; i++){
+                            list[i] = membres.get(i).getTontine().getObjectId();
+                        }*/
+
+                        ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
+                        tontineParseQuery.whereNotContainedIn("objectId", Arrays.asList(tontineIdList));
+                        tontineParseQuery.findInBackground(new FindCallback<Tontine>() {
+                            @Override
+                            public void done(List<Tontine> tontines, ParseException e) {
+                                if(e==null){
+                                    mItems = tontines;
+                                    if(mItems.size()>0) {
+                                        listview.setAdapter(new TontinesAdapter(getActivity().getApplicationContext(), mItems));
+                                    }
+                                    else if (mItems.size()==0) {
+                                        TontinesAdapter ta = new TontinesAdapter(getActivity().getApplicationContext(), mItems);
+                                        ta.clear();
+                                        listview.setAdapter(ta);
+                                        ta.notifyDataSetChanged();
+                                        System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
+                                    }
+                                    swipeLayout.setRefreshing(false);
+                                }else{
+                                    Log.d("Tontine","Not found");
+                                    swipeLayout.setRefreshing(false);
+                                }
+                            }
+                        });
+                        /*for (Membre membre : membres) {
+                            ParseQuery<Tontine> tontineParseQuery = ParseQuery.getQuery(Tontine.class);
+                            tontineParseQuery.whereNotEqualTo("objectId",membre.getTontine().getObjectId());
+                            tontineParseQuery.findInBackground(new FindCallback<Tontine>() {
+                                @Override
+                                public void done(List<Tontine> tontines, ParseException e) {
+                                    if(e==null){
+                                        mItems = tontines;
+                                        if(mItems.size()>0) {
+                                            listview.setAdapter(new TontinesAdapter(getActivity().getApplicationContext(), mItems));
+                                        }
+                                        else if (mItems.size()==0) {
+                                            TontinesAdapter ta = new TontinesAdapter(getActivity().getApplicationContext(), mItems);
+                                            ta.clear();
+                                            listview.setAdapter(ta);
+                                            ta.notifyDataSetChanged();
+                                            System.out.println("Nombre d'element dans l'adapter: " + listview.getAdapter().getCount());
+                                        }
+                                        swipeLayout.setRefreshing(false);
+                                    }else{
+                                        Log.d("Tontine","Not found");
+                                        swipeLayout.setRefreshing(false);
+                                    }
+                                }
+                            });
+                        }*/
 
                     }else{
                         Log.d("Membre", "not found");
                         swipeLayout.setRefreshing(false);
+                        progressWheel.setVisibility(View.GONE);
+                        textNoTontine.setVisibility(View.VISIBLE);
                     }
 
                 }
@@ -193,9 +358,37 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
         }
 
+    }
+    public void snackBar(){
+        snackBar = new SnackBar(getActivity(), "Erreur réseau !", "Cancel", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    snackBar.dismiss();
+                }
+            });
+        snackBar.show();
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        setRetainInstance(true);
+        View rootView = inflater.inflate(R.layout.fragment_tontines,container, false);
+        listview = (ListView) rootView.findViewById(R.id.listviewTontine);
+        adapter = new TontinesAdapter(getActivity().getApplicationContext(), mItems);
+        listview.setAdapter(adapter);
+        listview.setDividerHeight(0);
+        thisuser = ParseUser.getCurrentUser();
+        ScrollView emptyView = (ScrollView) rootView.findViewById(R.id.emptyList);
+        listview.setEmptyView(emptyView);
 
-
-
+        textNoTontine = (TextView) rootView.findViewById(R.id.textNoTontine);
+        progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
+        listview.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container_broadcast);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorSchemeColors(R.color.app_color, R.color.app_color, R.color.app_color);
+        swipeLayout.setEnabled(true);
+        swipeLayout.setRefreshing(true);
+        loadTontines(thisuser);
         listview.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
@@ -278,9 +471,8 @@ public class TontinesFragment extends Fragment implements SwipeRefreshLayout.OnR
                 Intent i = new Intent(getActivity().getApplicationContext(), InfoTontineActivity.class);
                 i.putExtra("TONTINE_ID", tontine.getObjectId());
                 i.putExtra("NOM", tontine.getNom());
-                i.putExtra("VILLE", tontine.getville());
-                i.putExtra("MONTANT", tontine.getMontantCotisation());
-                i.putExtra("NB_BENEFICIAIRE", tontine.getNbBeneficiaire());
+                i.putExtra("AMANDE", tontine.getAmande());
+                i.putExtra("TYPE", tontine.getType());
                 i.putExtra("JOUR", tontine.getJourCotisation());
                 i.putExtra("DESCRIPTION", tontine.getDescription());
                 i.putExtra("DATE", tontine.getCreation_date());

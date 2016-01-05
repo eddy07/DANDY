@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.gc.materialdesign.widgets.SnackBar;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParsePush;
@@ -38,12 +39,14 @@ public class RegisterActivity extends ActionBarActivity {
     private Context context;
     public static int TYPE_NOT_CONNECTED = 0;
     private boolean status = false;
+    private SnackBar snackBar;
     private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        setTitle("Sign Up");
+        //setTitle("Sign Up");
+        getSupportActionBar().hide();
         context = this;
         mName = (EditText)findViewById(R.id.nom);
         mEmail = (EditText)findViewById(R.id.email);
@@ -94,9 +97,42 @@ public class RegisterActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void snackBar(boolean status, String context){
+        if (status==true && context==null) {
+            snackBar = new SnackBar(this, getResources().getString(R.string.no_internet), "", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    snackBar.dismiss();
+                }
+            });
+        }else if(status==false && context=="empty_field") {
+            snackBar = new SnackBar(this, "Erreur : Champs incomplets !", "", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    snackBar.dismiss();
+                }
+            });
+        }else if(status==false && context=="signup_error"){
+            snackBar = new SnackBar(this, "Error : " + context, "", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    snackBar.dismiss();
+                }
+            });
+        }else{
+            snackBar = new SnackBar(this, getResources().getString(R.string.no_internet), "", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    snackBar.dismiss();
+                }
+            });
+        }
+    }
+
     public void startMain(){
         if (NetworkUtil.getConnectivityStatus(this) == TYPE_NOT_CONNECTED) {
-            Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
+            snackBar(false, "noInternet");
         } else {
             String name = mName.getText().toString();
             String email = mEmail.getText().toString();
@@ -135,7 +171,6 @@ public class RegisterActivity extends ActionBarActivity {
                                 @Override
                                 public void done(ParseException e) {
                                     if (e == null) {
-                                        ParseInstallation.getCurrentInstallation().saveInBackground();
                                         Log.d("com.parse.push", "user " + user.getUsername() + " successfully subscribed to  user push notification.");
                                     } else {
                                         Log.e("com.parse.push", "failed to subscribe for push error = " + e);
@@ -146,7 +181,6 @@ public class RegisterActivity extends ActionBarActivity {
                                 @Override
                                 public void done(ParseException e) {
                                     if (e == null) {
-                                        ParseInstallation.getCurrentInstallation().saveInBackground();
                                         Log.d("com.parse.push", "user " + user.getUsername() + " successfully subscribed to  idjangui push notification.");
                                     } else {
                                         Log.e("com.parse.push", "failed to subscribe for push idjangui error = " + e);
@@ -169,7 +203,8 @@ public class RegisterActivity extends ActionBarActivity {
                             }
                         } else {
                             progressDialog.dismiss();
-                            Toast.makeText(context, "Error : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(context, "Erreur : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            snackBar(false, "signup_error");
 
                         }
                     }
@@ -177,7 +212,8 @@ public class RegisterActivity extends ActionBarActivity {
 
 
             } else {
-               Toast.makeText(context,"Champs incomplets",Toast.LENGTH_LONG).show();
+               //Toast.makeText(context,"Champs incomplets",Toast.LENGTH_LONG).show();
+                snackBar(false, "empty_field");
             }
         }
     }

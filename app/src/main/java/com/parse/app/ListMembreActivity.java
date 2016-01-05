@@ -1,8 +1,10 @@
 package com.parse.app;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -41,6 +43,7 @@ public class ListMembreActivity extends ActionBarActivity implements SwipeRefres
     private List<Membre> membres = new ArrayList<Membre>();
     public static final int TYPE_NOT_CONNECTED = 0;
     private String tontineId;
+    private Activity a;
     private ParseUser thisuser;
     private Context context;
     private boolean reachedTop;
@@ -55,11 +58,12 @@ public class ListMembreActivity extends ActionBarActivity implements SwipeRefres
         getSupportActionBar().setTitle("Membres");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         context = this;
+        a = this;
         thisuser = ParseUser.getCurrentUser();
         tontineId = getIntent().getExtras().getString("TONTINE_ID");
         listView = (ListView) findViewById(R.id.listviewMembre);
         progressWheel = (ProgressWheel)findViewById(R.id.progress_wheel);
-        adapter = new MembreListAdapter(this, membres);
+        adapter = new MembreListAdapter(tontineId,this,this, membres);
         listView.setAdapter(adapter);
         //listView.setDividerHeight(0);
         adapter.notifyDataSetChanged();
@@ -88,13 +92,14 @@ public class ListMembreActivity extends ActionBarActivity implements SwipeRefres
                         ParseQuery<Membre> membreQuery = ParseQuery.getQuery(Membre.class);
                         membreQuery.whereEqualTo("tontine", tontine);
                         membreQuery.orderByAscending("date_inscription");
+                        membreQuery.whereNotEqualTo("adherant", thisuser);
                         membreQuery.findInBackground(new FindCallback<Membre>() {
                             @Override
                             public void done(List<Membre> membreList, ParseException e) {
                                 if(( e == null) && (membreList.size()>=0)){
                                     membres = membreList;
                                     if(membres.size() == 0){
-                                        MembreListAdapter sa = new MembreListAdapter(context, membres);
+                                        MembreListAdapter sa = new MembreListAdapter(tontineId,context,a, membres);
                                         sa.clear();
                                         listView.setAdapter(sa);
                                         sa.notifyDataSetChanged();
@@ -105,7 +110,7 @@ public class ListMembreActivity extends ActionBarActivity implements SwipeRefres
                                     }else{
                                         progressWheel.setVisibility(View.GONE);
                                         textNoMembre.setVisibility(View.GONE);
-                                        listView.setAdapter(new MembreListAdapter(context, membres));
+                                        listView.setAdapter(new MembreListAdapter(tontineId,context,a, membres));
                                     }
                                     swipeLayout.setRefreshing(false);
                                 }else{
@@ -252,6 +257,10 @@ public class ListMembreActivity extends ActionBarActivity implements SwipeRefres
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConf){
+
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -296,14 +305,15 @@ public class ListMembreActivity extends ActionBarActivity implements SwipeRefres
                         ParseQuery<Membre> membreQuery = ParseQuery.getQuery(Membre.class);
                         membreQuery.whereEqualTo("tontine", tontine);
                         membreQuery.orderByAscending("date_inscription");
+                        membreQuery.whereNotEqualTo("adherant", thisuser);
                         membreQuery.findInBackground(new FindCallback<Membre>() {
                             @Override
                             public void done(List<Membre> membreList, ParseException e) {
                                 if(( e == null) && (membreList.size()>=0)){
                                     membres = membreList;
-                                    listView.setAdapter(new MembreListAdapter(context, membres));
+                                    listView.setAdapter(new MembreListAdapter(tontineId,context,a, membres));
                                     if(membres.size() == 0){
-                                        MembreListAdapter sa = new MembreListAdapter(context, membres);
+                                        MembreListAdapter sa = new MembreListAdapter(tontineId,context,a, membres);
                                         sa.clear();
                                         listView.setAdapter(sa);
                                         sa.notifyDataSetChanged();

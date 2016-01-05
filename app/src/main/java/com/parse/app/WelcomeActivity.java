@@ -26,6 +26,7 @@ public class WelcomeActivity extends ActionBarActivity{
     private LinearLayout blockdescr;
     private ScrollView scroll;
     private TextView app;
+    private TextView appdes;
     private TextView text1;
     private TextView text2;
     private Context context;
@@ -35,18 +36,23 @@ public class WelcomeActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         context = this;
-        blockapp = (LinearLayout)findViewById(R.id.blockapp);
-        blockdescr = (LinearLayout)findViewById(R.id.blockdescr);
+        getSupportActionBar().hide();
+        app = (TextView)findViewById(R.id.app);
+        appdes = (TextView)findViewById(R.id.appDes);
+        setFontApp(app);
+        setFontAppDes(appdes);
+        /*blockapp = (LinearLayout)findViewById(R.id.blockapp);
+        blockdescr = (LinearLayout)findViewById(R.id.blockdescr);*/
         loginBtn = (Button)findViewById(R.id.loginBtn);
         registerBtn = (Button)findViewById(R.id.registerBtn);
-        app = (TextView)findViewById(R.id.app);
-        text1 = (TextView)findViewById(R.id.text1);
-        text2 = (TextView)findViewById(R.id.text2);
-        scroll = (ScrollView)findViewById(R.id.scroll);
+
+        //text1 = (TextView)findViewById(R.id.text1);
+        //text2 = (TextView)findViewById(R.id.text2);
+        /*scroll = (ScrollView)findViewById(R.id.scroll);
         scroll.setSmoothScrollingEnabled(true);
-        getSupportActionBar().hide();
-        setFontApp(app);
-        setFontText(text1,text2);
+
+
+        setFontText(text1,text2);*/
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +99,11 @@ public class WelcomeActivity extends ActionBarActivity{
     }
 
     public void setFontApp(TextView tv) {
-        Typeface tf = Typeface.createFromAsset(tv.getContext().getAssets(), "fonts/Roboto-Medium.ttf");
+        Typeface tf = Typeface.createFromAsset(tv.getContext().getAssets(), "fonts/Antipasto_regular.otf");
+        tv.setTypeface(tf);
+    }
+    public void setFontAppDes(TextView tv) {
+        Typeface tf = Typeface.createFromAsset(tv.getContext().getAssets(), "fonts/Roboto-Thin.ttf");
         tv.setTypeface(tf);
     }
     public void setFontText(TextView tv1,TextView tv2) {
